@@ -26,4 +26,8 @@ public class UserService {
          list.add(user);
          return user;
     }
+
+    public User getPassword(String password) {
+        return this.list.stream().filter(user -> user.getPassword().equals(password)).findAny().get();
+    }
 }

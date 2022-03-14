@@ -20,18 +20,15 @@ public class UserConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailService).passwordEncoder(passwordEncoder());
-
     }
-
-
  @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).
-                and().authorizeRequests()
-                .antMatchers("/register","/register/**").hasRole("ADMIN").
-                antMatchers("/users").hasRole("USER")
-        .anyRequest().
-                authenticated().and().formLogin() ;
+
+              http.authorizeRequests().
+                antMatchers("/register").permitAll().
+                antMatchers("/users","/users/**").hasRole("ADMIN")
+                      .antMatchers("/hey").permitAll().antMatchers(
+                     "/logIn").hasRole("USER").anyRequest().authenticated().and().httpBasic();
 
     }
 @Bean

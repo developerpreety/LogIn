@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 
@@ -16,8 +18,14 @@ public class User {
         @Id
         private String username;
         private String password;
+
+        @Column(unique = true)
         private String email;
         private String status;
-        private String role;
+
+      /*  public String setPassword(String password){
+                return new BCryptPasswordEncoder().encode(password);
+        }*/
+
 
         }

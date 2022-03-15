@@ -1,33 +1,70 @@
 package com.demo.LogIn.service;
 
 import com.demo.LogIn.entity.User;
+import com.demo.LogIn.repository.UserRepository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 @Service
-public class UserService {
-    private List<User> list = new ArrayList<>();
+@AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
+@Setter
+public class UserService implements UserDetails {
+
+private String username;
+private String password;
+private String email;
+private String status;
 
 
+   public static UserService build(User user){
+       return new UserService(user.getUsername(),user.getPassword(), user.getEmail(), user.getStatus());
+   }
 
-    //get all users
-    public List<User> getUsers() {
-        return list;
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
     }
 
-    //get user by id
-    public User getUser(String username) {
-        return this.list.stream().filter(user -> user.getUsername().equals(username)).findAny().get();
+    @Override
+    public String getPassword() {
+        return password ;
     }
 
-    //save user
-    public User saveUser(User user){
-         list.add(user);
-         return user;
+    @Override
+    public String getUsername() {
+        return username;
     }
 
-    public User getPassword(String password) {
-        return this.list.stream().filter(user -> user.getPassword().equals(password)).findAny().get();
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

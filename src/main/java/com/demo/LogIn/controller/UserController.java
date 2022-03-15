@@ -1,42 +1,37 @@
 package com.demo.LogIn.controller;
 
 import com.demo.LogIn.entity.User;
+import com.demo.LogIn.service.UserLoginServices;
 import com.demo.LogIn.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
+@RequestMapping
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserLoginServices userLoginServices;
+    private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/users")
-    public List<User> getUsers(){
-        return userService.getUsers();
+@GetMapping("/users")
+    public List<User> getUser(){
+        return userLoginServices.getUsers();
     }
-    @GetMapping("/users/**")
-    public String getUser(){
-        return "WELCOME";
+
+    @GetMapping("/users/{username}")
+    public User getUser(@PathVariable String username){
+    return userLoginServices.getUser(username);
     }
     @PostMapping("/register")
-    public String signUp(@RequestBody User user){
-       userService.saveUser(user);
-        return "<h1>WELCOME USER<h1>";
-    }
-    @PostMapping("/logIn")
-    public String logIn(@RequestBody String username){
-
-       for(User u:userService.getUsers()) {
-           if (u.getUsername().equals(username))
-               return "Log in successful";
-           else
-               throw new UsernameNotFoundException("User Not Found, Please Register");
-
-       }
-       return "Welcome User";
+    public User saveUser(@RequestBody User user){
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
+      return userLoginServices.saveUser(user);
 
     }
 

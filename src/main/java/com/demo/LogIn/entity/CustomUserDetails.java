@@ -15,7 +15,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         HashSet<SimpleGrantedAuthority> set=new HashSet<>();
-        set.add(new SimpleGrantedAuthority(this.user.getRole()));
+        set.add(new SimpleGrantedAuthority(this.user.getUsername()));
         return set;
     }
 
@@ -43,7 +43,6 @@ public class CustomUserDetails implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
-
     @Override
     public boolean isEnabled() {
         return true;
